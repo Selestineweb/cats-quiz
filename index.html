@@ -13,7 +13,7 @@
             font-size: 0.85em;
         }
         body {
-            font-family: "華康圓體", "Arial Rounded MT Bold", sans-serif;
+            font-family: FakePearl-Regular, Microsoft JhengHei, 微軟正黑體, PingFang, LiHei Pro, 黑體-繁, sans-serif;
             background-image: url('https://i.ibb.co/BVgDJG1t/catwall.png');
             background-size: cover;
             color: white;
@@ -34,16 +34,17 @@
             border-radius: 10px;
             color: black;
             margin: auto;
-            height: 80vh;
+            min-height: 80vh;
             max-height: 80vh;
             overflow-y: auto;
+            position: relative;
         }
         h1 {
             font-family: sans-serif;
             font-size: 1.8em;
         }
         .question {
-            font-size: 1.3em;
+            font-size: 1.2em;
             margin: 30px 0;
             text-align: left;
         }
@@ -94,6 +95,19 @@
         .button:hover {
             background-color: #f7c67e;
         }
+        .bottom-gif {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+        }
+        .bottom-gif img {
+            max-width: 50%;
+            height: auto;
+        }
+      
     </style>
 </head>
 <body>
@@ -108,6 +122,10 @@
         <div id="question-container" class="fade show hidden">
             <div class="question" id="question-text"></div>
             <ul class="options" id="options-list"></ul>
+            <div class="bottom-gif">
+              <img src="https://i.ibb.co/FL0vrbvC/cats.gif" alt="cats" border="0">
+              <p style="font-weight: bold; color: #796b69;">IG：@circle.cat111</p>
+            </div>
         </div>
 
         <div id="final-score" class="hidden">
@@ -117,7 +135,7 @@
         </div>
     </div>
 </div>
-
+  
 <script>
     // 全域變數
     let score = 0;
