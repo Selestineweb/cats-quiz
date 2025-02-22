@@ -2,11 +2,15 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=360, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>貓奴檢定 - 貓知識測驗</title>
     <style>
         body, .question, .options li, h1, p {
-        user-select: none;
+            user-select: none;
+        }
+        .highlight {
+            color: #6b6e7a;
+            font-size: 0.85em;
         }
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -25,17 +29,17 @@
             position: relative;
         }
         .overlay {
-            background: rgba(255, 255, 255, 0.85); /* 半透明背景 */
+            background: rgba(255, 255, 255, 0.85);
             padding: 20px;
             border-radius: 10px;
             color: black;
             margin: auto;
             height: 80vh;
-            max-height: 80vh; /* 限制最大高度 */
-            overflow-y: auto; /* 內容過多時出現滾動條 */
+            max-height: 80vh;
+            overflow-y: auto;
         }
         h1 {
-            font-family:sans-serif;
+            font-family: sans-serif;
             font-size: 1.8em;
         }
         .question {
@@ -64,12 +68,10 @@
             display: none;
         }
         #score p {
-            font-size: 1.2em; /* 調整字體大小 */
-            line-height: 1.6; /* 增加行距，讓可讀性更佳 */
-            text-align: left; /* 讓文字靠左對齊 */
-            margin-bottom: 15px; /* 增加段落間距 */
-        }
-
+            font-size: 1.2em;
+            line-height: 1.6;
+            text-align: left;
+            margin-bottom: 15px;
         }
         .fade {
             opacity: 0;
@@ -98,8 +100,9 @@
 <div class="container">
     <div class="overlay">
         <h1>貓奴檢定 - 貓知識測驗</h1>
-        <p>想養貓，除了對貓咪的愛是不夠的！想跟喵星人相處融洽，他們的心情與行為、豢養所需物品、身心保健等知識皆不可或缺。透過測驗小遊戲貓奴檢定測試自己是不是稱職貓奴吧！</p>
-        <button class="button" onclick="startTest()">開始測驗</button>
+        <!-- 建議給說明與開始按鈕加上 id，方便操作 -->
+        <p id="description">想養貓，除了對貓咪的愛是不夠的！想跟喵星人相處融洽，他們的心情與行為、豢養所需物品、身心保健等知識皆不可或缺。透過測驗小遊戲貓奴檢定測試自己是不是稱職貓奴吧！</p>
+        <button id="start-btn" class="button" onclick="startTest()">開始測驗</button>
 
         <div id="question-container" class="fade show hidden">
             <div class="question" id="question-text"></div>
@@ -109,38 +112,94 @@
         <div id="final-score" class="hidden">
             <div id="score"></div>
             <button class="button" onclick="restartTest()">重新測驗</button>
-            <button class="button" onclick="showAnalysis()">查看解析</button>
+            <button id="analysis-btn" class="button" onclick="showAnalysis()">查看解析</button>
         </div>
     </div>
 </div>
 
 <script>
-         function startTest() {
-         document.querySelector(".overlay p").style.display = "none";
-         document.querySelector(".overlay .button").style.display = "none";
-         document.getElementById("question-container").classList.remove("hidden");
-         }
+    // 全域變數
     let score = 0;
     let currentQuestion = 0;
-    const questions = [
-        { text: "Q1：貓咪該幾歲結紮最合適？", answers: ["A.6個月前後是最理想的時機！", "B. 如果貓咪發情再結紮就好", "C.1歲後才開始比較合適", "D.等到牠開始生小貓時再結紮"], correct: "A", analysis: "解析：最理想的結紮時間，是母貓約4-7個月大，公貓約7-10個月大，在貓咪發情前就完成絕育，除了可預防公貓亂噴尿的行為，也能降低母貓子宮蓄膿和乳腺腫瘤發生的機率。" },
-        { text: "Q2：貓咪在家也需要驅蟲嗎？", answers: ["A.不需要，平常牠都不出去", "B.需要，貓也有可能有跳蚤！", "C.不用啦，只要偶爾有驅蟲就好", "D.有發現蟲再驅，平時不需要"], correct: "B", analysis: "解析：正確答案是 B。解析：即使是家貓，也有可能因為與人接觸或接觸到外來物品（如鞋子、衣物）而帶回寄生蟲，即便牠們不出門，定期每個月1次的驅蟲很重要。" },
-        { text: "Q3：貓咪需要打預防針嗎？", answers: ["A.沒必要，牠們是家貓", "B.只有出去玩的貓咪才需要打", "C.需要，保護貓咪免受各種疾病", "D.只要牠不生病，就不用打"], correct: "C", analysis: "解析：無論牠是室內貓還是外出貓，都需要定期接種「無佐劑的核心疫苗」，貓咪接種疫苗是為了預防各種嚴重疾病，以保護貓咪的健康和生命安全！<br>◎貓咪常見預防針分為：<br>核心疫苗（3合1、4合1、5合1）<br>非核心疫苗（貓白血病病毒、貓披衣菌、博得氏桿菌核心疫苗）<br>狂犬定疫苗（法律規範貓咪需要定期施打，建議選無佐劑狂犬疫苗）"},
-        { text: "Q4：新手養貓必備物品，都需要些什麼？", answers: ["A.貓砂盆、貓砂", "B.貓飼料、罐頭", "C.貓窩、貓抓板和玩具", "D.貓咪穿的衣服"], correct: "D", analysis: "解析：◎新手養貓必備的物品<br>食：因為貓咪天性不愛喝水，建議至少一天一餐罐頭，罐頭請選主食罐哦～<br>衣：貓咪不需要穿衣服，牠們的毛已經能夠保護自己，長時間穿衣服可能造成皮膚問題。<br>住：寬敞的貓砂盆和適合的貓砂，以及乾淨舒適可以休息的空間非常重要。<br>行：貓咪天性容易緊張，外出時安全堅固的運輸籠是必備的，建議選擇2個以上的出入口，上層可拆的硬式運輸籠。<br>樂：幼貓時期是貓咪活動量大的時候，適當的陪貓咪玩有效消耗體力，比較不會破壞家具、半夜起床開派對，可以購買不同的逗貓棒、貓跳台、貓抓板。"},
-        { text: "Q5：貓咪需要戴項圈嗎？", answers: ["A.需要，家裡太大會找不到貓咪", "B.不需要，項圈可能卡住，讓貓咪不舒服或受傷！", "C.只有外出時才需要，確保安全", "D.當然需要，這樣看起來才像個小時尚達人！"], correct: "B", analysis: "解析：貓咪是否戴項圈其實要根據需求來決定，雖然項圈在某些情況下能幫助識別貓咪，但對許多貓咪來說，項圈會引起不適，甚至卡住或受傷，尤其是當貓咪發現自己能夠掙脫時，可能會更加焦慮。" },
-        { text: "Q6：貓咪可以吃什麼？", answers: ["A.貓貓長身體，要喝牛奶補充營養", "B.辛香料來一點，大蒜、洋蔥來者不拒", "C.可以吃南瓜和地瓜，幫助消化", "D.貓咪是原始動物，就要吃生蛋、生肉和骨頭！"], correct: "C", analysis: "解析：貓咪是肉食性動物，最適合的食物是高蛋白的肉類，如煮熟的魚肉和雞肉，適當補充南瓜和地瓜之類的高纖維食物，有助於貓咪的消化健康，尤其對有便秘問題的貓咪非常有幫助！<br>牛奶和乳製品、洋蔥和大蒜等辛香類、巧克力、生肉和生魚、魚骨頭、堅果類、甜食和含糖食品……等，都不適合貓咪食用，可能會讓貓咪有健康上的問題，或面臨死亡的風險。" },
-        { text: "Q7：從貓咪尾巴看適合互動的時機？", answers: ["A.尾巴直直舉高高，頂端微微彎曲", "B.尾巴捲捲，在貓咪身體繞一圈", "C.尾巴毛都炸起來了，是被我電到嗎？", "D.像狗狗一樣左右快速甩尾巴，肯定是很愛我"], correct: "A", analysis: "解析：貓咪的尾巴是判斷情緒和需求的很好的指標，可以看出很多不同的含意。<br><br>◎適合互動的時機<br>尾巴直立，微微彎曲頂端：代表心情愉快、放鬆，適合嚕貓的大好機會。<br>尾巴輕微擺動搖晃：表示有些疑惑或好奇，對周圍的事物產生了興趣。<br>尾巴直立且快速抖動：當好奇或興奮時的表現，表示想要探索或狩獵。<br><br>◎不適合互動的時機：<br>尾巴快速搖晃或擺動：表示心情不好的明顯特徵，牠可能不太想被打擾。<br>尾巴低垂或夾緊：這是貓咪感到害怕或緊張的反應。<br>尾巴蓬鬆或膨脹：尾巴變大或毛豎起來，表示處於防禦狀態。" },
-        { text: "Q8：貓咪的外出選擇？", answers: ["A.有超大窗戶可以看風景外出包、推車", "B.可愛的小背包、太空包", "C.安全的外出包、運輸籠", "D.隨便放個紙箱、牽繩直接帶走就好"], correct: "C", analysis: "解析：貓咪天性容易緊張，外出時需要挑選透氣性好、安全堅固且大小適合，同時有隱蔽性的外出包、運輸籠或推車，建議選擇2個以上的出入口，上層可拆的硬式運輸籠。<br>可愛小背包或太空包可能不夠透氣，有超大窗戶或隱蔽性低的會增加貓咪的緊張和焦慮感，牽繩和紙箱不定因素較多，無法有效及時的保護貓咪安全。" },
-        { text: "Q9：貓咪廁所放哪裡最好？", answers: ["A.在牠吃飯地點旁，吃飽就可以上廁所", "B.在安靜、私密的地方，遠離食物和水源", "C.在貓咪的床旁，牠才有家的感覺", "D.有空間就好，隨便放在房間的任何角落"], correct: "B", analysis: "解析：貓咪需要一個私密的空間，避免把貓砂盆放在人類經常走動的地方，也要遠離貓吃飯、睡覺位置，因為沒人喜歡在廁所吃東西、睡覺對吧！" },
-        { text: "Q10：貓咪天生愛自由，我可以帶牠出去嗎？", answers: ["A.當然可以，有牽繩就帶牠走走吧！", "B.有訓練過的貓咪，就一定沒問題", "C.家裡附近沒關係，牠會自己回來的", "D.不建議，最安全的就是家裡"], correct: "D", analysis: "解析：<br>帶貓咪一起旅行、帥氣遛貓是很多人的夢想，但其實那是極少數貓咪才能辦到，因為貓咪有領域性，在熟悉的環境，才能有放鬆、自在的安全感。<br>如果真的想遛貓，做好功課和訓練是很重要的哦！<br>◎遛貓評估三重點<br>貓：貓咪是否勇敢有自信、對陌生人和動物的社會化程度、對新接觸的陌生環境安全感、是否有好的體能、是否容易執行召回指令。<br>人：是否能定時、定點帶貓咪外出（當貓咪領域受到限制，可能會產生挫折的行為問題），是否能看懂貓的肢體語言（警戒、興奮的反應），完成遛貓前訓練（喚回訓練、牽繩減敏、背帶減敏、外出包減敏），處理危機反應（如何保護貓咪、逃離危險的方法，如收牽繩和躲進外出包）<br>遛貓環境：沒有陌生人的家門口旁（封閉的走廊、庭院），可能有陌生人的住家附近（封閉的交誼廳、梯廳），住家附近的開放空間（安靜街道、公園），無法從家門口走路到達的空間（開車才可達的公園、街道），吵鬧熱鬧的環境（寵物展、夜市）<br>工具：短牽繩（適合新手和敏感貓），長牽繩（適合沒有纏繞風險的單純環境）<br>請注意牽繩沒有最完美，只有最適合，所有牽繩、背帶都有逃脫可能。<br>家裡環境：先將家中環境豐富化（生活所需、垂直空間、躲藏空間等，讓貓咪有選擇權），規律與貓咪陪玩（時間不用久，但品質要高）" },
+    let userAnswers = []; // 儲存使用者選擇
 
+    // 題庫，第一題的解析文字依照需求修改為「最佳時間是 6-8 個月。」
+    const questions = [
+        { 
+            text: "Q：貓咪該幾歲結紮最合適？", 
+            answers: ["A.6個月前後是最理想的時機！", "B. 如果貓咪發情再結紮就好", "C.1歲後才開始比較合適", "D.等到牠開始生小貓時再結紮"], 
+            correct: "A", 
+            analysis: "<span class='highlight'>最理想的結紮時間，是母貓約4-7個月大，公貓約7-10個月大，在貓咪發情前就完成絕育，除了可預防公貓亂噴尿的行為，也能降低母貓子宮蓄膿和乳腺腫瘤發生的機率。</span>"
+      },
+        { 
+            text: "Q：貓咪在家也需要驅蟲嗎？", 
+            answers: ["A.不需要，平常牠都不出去", "B.需要，貓也有可能有跳蚤！", "C.不用啦，只要偶爾有驅蟲就好", "D.有發現蟲再驅，平時不需要"], 
+            correct: "B", 
+            analysis: "<span class='highlight'>即使是家貓，也有可能因為與人接觸或接觸到外來物品（如鞋子、衣物）而帶回寄生蟲，即便牠們不出門，定期每個月1次的驅蟲很重要。</span>" 
+        },
+        { 
+            text: "Q：貓咪需要打預防針嗎？", 
+            answers: ["A.沒必要，牠們是家貓", "B.只有出去玩的貓咪才需要打", "C.需要，保護貓咪免受各種疾病", "D.只要牠不生病，就不用打"], 
+            correct: "C", 
+            analysis: "<span class='highlight'>無論牠是室內貓還是外出貓，都需要定期接種「無佐劑的核心疫苗」，貓咪接種疫苗是為了預防各種嚴重疾病，以保護貓咪的健康和生命安全！<br>◎貓咪常見預防針分為：<br>核心疫苗（3合1、4合1、5合1）<br>非核心疫苗（貓白血病病毒、貓披衣菌、博得氏桿菌核心疫苗）<br>狂犬定疫苗（法律規範貓咪需要定期施打，建議選無佐劑狂犬疫苗）</span>" 
+        },
+        { 
+            text: "Q：新手養貓必備物品，不需要什麼呢？", 
+            answers: ["A.貓砂盆、貓砂", "B.貓飼料、罐頭", "C.貓窩、貓抓板和玩具", "D.貓咪穿的衣服"], 
+            correct: "D", 
+            analysis: "<span class='highlight'>◎新手養貓必備的物品<br>食：因為貓咪天性不愛喝水，建議至少一天一餐罐頭，罐頭請選主食罐哦～<br>衣：貓咪不需要穿衣服，牠們的毛已經能夠保護自己，長時間穿衣服可能造成皮膚問題。<br>住：寬敞的貓砂盆和適合的貓砂，以及乾淨舒適可以休息的空間非常重要。<br>行：貓咪天性容易緊張，外出時安全堅固的運輸籠是必備的，建議選擇2個以上的出入口，上層可拆的硬式運輸籠。<br>樂：幼貓時期是貓咪活動量大的時候，適當的陪貓咪玩有效消耗體力，比較不會破壞家具、半夜起床開派對，可以購買不同的逗貓棒、貓跳台、貓抓板。</span>"
+        },
+        { 
+            text: "Q：貓咪需要戴項圈嗎？", 
+            answers: ["A.需要，家裡太大會找不到貓咪", "B.不需要，項圈可能卡住，讓貓咪不舒服或受傷！", "C.只有外出時才需要，確保安全", "D.當然需要，這樣看起來才像個小時尚達人！"], 
+            correct: "B", 
+            analysis: "<span class='highlight'>貓咪是否戴項圈其實要根據需求來決定，雖然項圈在某些情況下能幫助識別貓咪，但對許多貓咪來說，項圈會引起不適，甚至卡住或受傷，尤其是當貓咪發現自己能夠掙脫時，可能會更加焦慮。</span>"
+        },
+        { 
+            text: "Q：貓咪可以吃什麼？", 
+            answers: ["A.貓貓長身體，要喝牛奶補充營養", "B.辛香料來一點，大蒜、洋蔥來者不拒", "C.可以吃南瓜和地瓜，幫助消化", "D.貓咪是原始動物，就要吃生蛋、生肉和骨頭！"], 
+            correct: "C", 
+            analysis: "<span class='highlight'>貓咪是肉食性動物，最適合的食物是高蛋白的肉類，如煮熟的魚肉和雞肉，適當補充南瓜和地瓜之類的高纖維食物，有助於貓咪的消化健康，尤其對有便秘問題的貓咪非常有幫助！<br>牛奶和乳製品、洋蔥和大蒜等辛香類、巧克力、生肉和生魚、魚骨頭、堅果類、甜食和含糖食品……等，都不適合貓咪食用，可能會讓貓咪有健康上的問題，或面臨死亡的風險。</span>"
+        },
+        { 
+            text: "Q：從貓咪尾巴看適合互動的時機？", 
+            answers: ["A.尾巴直直舉高高，頂端微微彎曲", "B.尾巴捲捲，在貓咪身體繞一圈", "C.尾巴毛都炸起來了，是被我電到嗎？", "D.像狗狗一樣左右快速甩尾巴，肯定是很愛我"], 
+            correct: "A", 
+            analysis: "<span class='highlight'>貓咪的尾巴是判斷情緒和需求的很好的指標，可以看出很多不同的含意。<br>◎適合互動的時機<br>尾巴直立，微微彎曲頂端：代表心情愉快、放鬆，適合嚕貓的大好機會。<br>尾巴輕微擺動搖晃：表示有些疑惑或好奇，對周圍的事物產生了興趣。<br>尾巴直立且快速抖動：當好奇或興奮時的表現，表示想要探索或狩獵。<br><br>◎不適合互動的時機：<br>尾巴快速搖晃或擺動：表示心情不好的明顯特徵，牠可能不太想被打擾。<br>尾巴低垂或夾緊：這是貓咪感到害怕或緊張的反應。<br>尾巴蓬鬆或膨脹：尾巴變大或毛豎起來，表示處於防禦狀態。</span>"
+        },
+        { 
+            text: "Q：貓咪的外出選擇？", 
+            answers: ["A.有超大窗戶可以看風景外出包、推車", "B.可愛的小背包、太空包", "C.安全的外出包、運輸籠", "D.隨便放個紙箱、牽繩直接帶走就好"], 
+            correct: "C", 
+            analysis: "<span class='highlight'>貓咪天性容易緊張，外出時需要挑選透氣性好、安全堅固且大小適合，同時有隱蔽性的外出包、運輸籠或推車，建議選擇2個以上的出入口，上層可拆的硬式運輸籠。<br>可愛小背包或太空包可能不夠透氣，有超大窗戶或隱蔽性低的會增加貓咪的緊張和焦慮感，牽繩和紙箱不定因素較多，無法有效及時的保護貓咪安全。</span>"
+        },
+        { 
+            text: "Q：貓咪廁所放哪裡最好？", 
+            answers: ["A.在牠吃飯地點旁，吃飽就可以上廁所", "B.在安靜、私密的地方，遠離食物和水源", "C.在貓咪的床旁，牠才有家的感覺", "D.有空間就好，隨便放在房間的任何角落"], 
+            correct: "B", 
+            analysis: "<span class='highlight'>貓咪需要一個私密的空間，避免把貓砂盆放在人類經常走動的地方，也要遠離貓吃飯、睡覺位置，因為沒人喜歡在廁所吃東西、睡覺對吧！</span>"
+        },
+        { 
+            text: "Q：貓咪天生愛自由，我可以帶牠出去嗎？", 
+            answers: ["A.當然可以，有牽繩就帶牠走走吧！", "B.有訓練過的貓咪，就一定沒問題", "C.家裡附近沒關係，牠會自己回來的", "D.不建議，最安全的就是家裡"], 
+            correct: "D", 
+            analysis: "<span class='highlight'>帶貓咪一起旅行、帥氣遛貓是很多人的夢想，但其實那是極少數貓咪才能辦到，因為貓咪有領域性，在熟悉的環境，才能有放鬆、自在的安全感。<br>如果真的想遛貓，做好功課和訓練是很重要的哦！<br><br>◎遛貓評估三重點<br>貓：貓咪是否勇敢有自信、對陌生人和動物的社會化程度、對新接觸的陌生環境安全感、是否有好的體能、是否容易執行召回指令。<br>人：是否能定時、定點帶貓咪外出（當貓咪領域受到限制，可能會產生挫折的行為問題），是否能看懂貓的肢體語言（警戒、興奮的反應），完成遛貓前訓練（喚回訓練、牽繩減敏、背帶減敏、外出包減敏），處理危機反應（如何保護貓咪、逃離危險的方法，如收牽繩和躲進外出包）<br>遛貓環境：沒有陌生人的家門口旁（封閉的走廊、庭院），可能有陌生人的住家附近（封閉的交誼廳、梯廳），住家附近的開放空間（安靜街道、公園），無法從家門口走路到達的空間（開車才可達的公園、街道），吵鬧熱鬧的環境（寵物展、夜市）<br>工具：短牽繩（適合新手和敏感貓），長牽繩（適合沒有纏繞風險的單純環境）<br>*請注意牽繩沒有最完美，只有最適合，所有牽繩、背帶都有逃脫可能。<br>家裡環境：先將家中環境豐富化（生活所需、垂直空間、躲藏空間等，讓貓咪有選擇權），規律與貓咪陪玩（時間不用久，但品質要高）</span>"
+        }
     ];
+
+    function startTest() {
+        // 隱藏說明與開始按鈕，建議透過 id 操作
+        document.getElementById("description").style.display = "none";
+        document.getElementById("start-btn").style.display = "none";
+        document.getElementById("question-container").classList.remove("hidden");
+    }
 
     function loadQuestion() {
         if (currentQuestion < questions.length) {
             document.getElementById('question-text').innerText = questions[currentQuestion].text;
             let optionsHtml = "";
-            questions[currentQuestion].answers.forEach((option, index) => {
+            questions[currentQuestion].answers.forEach((option) => {
+                // 點選時傳入選項首字母
                 optionsHtml += `<li onclick="checkAnswer('${option.charAt(0)}')">${option}</li>`;
             });
             document.getElementById('options-list').innerHTML = optionsHtml;
@@ -150,6 +209,8 @@
     }
 
     function checkAnswer(selectedAnswer) {
+        // 儲存使用者答案
+        userAnswers[currentQuestion] = selectedAnswer;
         if (selectedAnswer === questions[currentQuestion].correct) {
             score++;
         }
@@ -160,27 +221,30 @@
     function showScore() {
         document.getElementById('question-container').classList.add('hidden');
         document.getElementById('final-score').classList.remove('hidden');
-        document.getElementById('score').innerHTML = `您的得分是：${score} / 10`;
+        document.getElementById('score').innerHTML = `您的得分是：${score} / ${questions.length}`;
     }
 
     function restartTest() {
         score = 0;
         currentQuestion = 0;
+        userAnswers = [];
         document.getElementById('final-score').classList.add('hidden');
         document.getElementById('question-container').classList.remove('hidden');
-        document.getElementById('score').innerHTML = ""; // 清空解析內容
-        document.querySelector('button[onclick="showAnalysis()"]').style.display = "inline-block"; // 恢復「查看解析」按鈕
+        document.getElementById('score').innerHTML = "";
+        document.getElementById("analysis-btn").style.display = "inline-block";
         loadQuestion();
     }
 
     function showAnalysis() {
         let analysisHtml = "<h2>解析：</h2>";
         questions.forEach((question, index) => {
-        analysisHtml += `<p>${question.text}<br>${question.analysis}</p>`;
+            // 根據使用者答案顯示 (√) 或 (X)
+            let resultSymbol = (userAnswers[index] === question.correct) ? "（√）" : "（X）";
+            analysisHtml += `<p>${question.text} ${resultSymbol}<br>${question.analysis}</p>`;
         });
         document.getElementById('score').innerHTML = analysisHtml;
-        // 隱藏「查看解析」按鈕
-        document.querySelector('button[onclick="showAnalysis()"]').style.display = "none";
+        // 隱藏查看解析的按鈕
+        document.getElementById("analysis-btn").style.display = "none";
     }
 
     loadQuestion();
