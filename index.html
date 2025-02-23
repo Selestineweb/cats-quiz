@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>貓奴檢定 - 貓知識測驗</title>
     <style>
         body, .question, .options li, h1, p {
@@ -18,12 +18,14 @@
             background-size: cover;
             color: white;
             text-align: center;
+            overflow-x: hidden;  /* 禁止水平滾動 */
+            max-width: 100vw;    /* 限制最大寬度為視口寬度 */
             margin: 0;
             padding: 0;
         }
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
             margin: auto;
             padding: 20px;
             position: relative;
@@ -107,11 +109,14 @@
             max-width: 50%;
             height: auto;
         }
+        button, a {
+            outline: none;
+        }
       
     </style>
 </head>
 <body>
-<audio id="bg-music" src="https://drive.google.com/uc?export=download&id=1kVT7AjQHnhdDtwLqDKYYQSWVObsChbGg" preload="auto" loop autoplay></audio>
+  <audio src="https://res.cloudinary.com/dna0z5yob/video/upload/v1740277219/The_Palace_Gardens_-_Asher_Fulero_qpzkwh.mp3" preload="auto" loop autoplay></audio>
 <div class="container">
     <div class="overlay">
         <h1>貓奴檢定 - 貓知識測驗</h1>
@@ -142,7 +147,6 @@
     let currentQuestion = 0;
     let userAnswers = []; // 儲存使用者選擇
 
-    // 題庫，第一題的解析文字依照需求修改為「最佳時間是 6-8 個月。」
     const questions = [
         { 
             text: "Q：貓咪該幾歲結紮最合適？", 
