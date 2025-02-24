@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>貓奴檢定 - 貓知識測驗</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         body, .question, .options li, h1, p {
             user-select: none;
@@ -13,7 +15,7 @@
             font-size: 0.85em;
         }
         body {
-            font-family: FakePearl-Regular, Microsoft JhengHei, 微軟正黑體, PingFang, LiHei Pro, 黑體-繁, sans-serif;
+            font-family: Noto Sans HK, sans-serif;
             background-image: url('https://i.ibb.co/BVgDJG1t/catwall.png');
             background-size: cover;
             color: white;
@@ -95,7 +97,7 @@
             margin: 10px;
         }
         .button:hover {
-            background-color: #f7c67e;
+            background-color:#fe9554;
         }
         .bottom-gif {
             position: absolute;
@@ -112,6 +114,12 @@
         button, a {
             outline: none;
         }
+        .score-text {
+    	   font-size: 1.5em;
+   	   color: #fe2b2e;
+  	   font-weight: bold;
+	}
+
       
     </style>
 </head>
@@ -264,10 +272,38 @@
     }
 
     function showScore() {
-        document.getElementById('question-container').classList.add('hidden');
-        document.getElementById('final-score').classList.remove('hidden');
-        document.getElementById('score').innerHTML = `您的得分是：${score} / ${questions.length}`;
+  	  document.getElementById('question-container').classList.add('hidden');
+  	  document.getElementById('final-score').classList.remove('hidden');
+    
+   	  let scoreText = `<span class="score-text">你的貓奴指數：${score} / ${questions.length}</span>`;
+  	  let extraMessage = '';
+  	  let image = '';
+
+  	  // 根據分數顯示額外訊息
+ 	  if (score < 2) {
+	     extraMessage = '<p>加油，快惡補貓知識，和喵星人的相處能更融洽哦！</p>';
+		image = '<img src="https://i.ibb.co/n80Jf1MK/1-2.png" alt="1-2" border="0" style="display: block; margin: 0 auto;">';
+  	  } else if (score >= 2 && score <= 4) {
+   	     extraMessage = '<p>還有很多要學哦，喵星人等著你進步！</p>';
+		image = '<img src="https://i.ibb.co/7x2Mtp59/3-4.png" alt="3-4" border="0" style="display: block; margin: 0 auto;">';
+  	  } else if (score >= 5 && score <= 6) {
+   	     extraMessage = '<p>可以多多觀察貓咪日常的活動，和喵星人提高好感度哦～</p>';
+		image = '<img src="https://i.ibb.co/Swf3tXwX/5-6.png" alt="5-6" border="0" style="display: block; margin: 0 auto;">';
+    	  } else if (score >= 7 && score <= 8) {
+  	      extraMessage = '<p>想必平常和喵星人相處很融洽吧，請繼續保持！</p>';
+		image = '<img src="https://i.ibb.co/4wDJfB68/7-8.png" alt="7-8" border="0" style="display: block; margin: 0 auto;">';
+   	  } else if (score == 9) {
+   	     extraMessage = '<p>你已經成為一個稱職的貓奴了，要好好愛牠們哦！</p>';
+		image = '<img src="https://i.ibb.co/TqDsLVZc/9.png" alt="9" border="0" style="display: block; margin: 0 auto;">';
+  	  } else if (score == 10) {
+  	     extraMessage = '<p>喵星人都贊同你是滿分貓奴，你就是貓咪界的傳奇人物！</p>';
+		image = '<img src="https://i.ibb.co/Fqcc0qwd/10.png" alt="10" border="0" style="display: block; margin: 0 auto;">';
     }
+
+	   // 顯示分數、圖片與額外訊息
+    		document.getElementById('score').innerHTML = scoreText + '<br>' + image + '<br>' + extraMessage;
+    }
+
 
     function restartTest() {
         score = 0;
