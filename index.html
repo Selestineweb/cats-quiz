@@ -116,7 +116,29 @@
     </style>
 </head>
 <body>
-  <audio src="https://res.cloudinary.com/dna0z5yob/video/upload/v1740277219/The_Palace_Gardens_-_Asher_Fulero_qpzkwh.mp3" preload="auto" loop autoplay></audio>
+  
+<audio id="bg-music" src="https://res.cloudinary.com/dna0z5yob/video/upload/v1740277219/The_Palace_Gardens_-_Asher_Fulero_qpzkwh.mp3" preload="auto" loop></audio>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let audio = document.getElementById("bg-music");
+
+        // 監聽用戶的首次點擊以解除靜音
+        function enableAudio() {
+            audio.muted = false;
+            audio.play().catch(error => console.log("自動播放失敗:", error));
+            document.removeEventListener("click", enableAudio);
+        }
+
+        // 自動播放（可能會被靜音）
+        audio.play().catch(() => {
+            // 等待用戶互動
+            document.addEventListener("click", enableAudio);
+        });
+    });
+</script>
+
+  
 <div class="container">
     <div class="overlay">
         <h1>貓奴檢定 - 貓知識測驗</h1>
